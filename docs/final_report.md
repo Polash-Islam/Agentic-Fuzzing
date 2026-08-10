@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This project implements an LLM-driven grammar-based fuzzer for Parson, a lightweight C JSON parser, at commit `ba29f4eda9ea7703a9f6a9cf2b0532a2605723c3`. Starting from the ANTLR JSON grammar in `grammar/JSON.g4`, the loop asks an LLM to generate Hypothesis strategies, runs them through a sanitizer-enabled C harness, summarizes feedback, and refines the next strategy. The official campaign used one 100-input baseline and five 500-input agentic iterations. No crashes, timeouts, sanitizer reports, or nonzero exits were found.
+This project implements an LLM-driven grammar-based fuzzer for Parson, a lightweight C JSON parser pinned to commit `ba29f4eda9ea7703a9f6a9cf2b0532a2605723c3`. Starting from the ANTLR JSON grammar in `grammar/JSON.g4`, the loop asks an LLM to generate Hypothesis strategies, runs them through a sanitizer-enabled C harness, summarizes feedback, and refines the next strategy. The official campaign used one 100-input baseline and five 500-input agentic iterations. No crashes, timeouts, sanitizer reports, or nonzero exits were found.
 
 ## Design
 
