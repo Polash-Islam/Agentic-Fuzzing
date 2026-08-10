@@ -1,0 +1,19 @@
+{
+  "generation_errors": 0,
+  "invalid": 6,
+  "passed": true,
+  "python_invalid": 7,
+  "python_valid": 33,
+  "python_valid_rate": 82.5,
+  "sample_outputs": [
+    "'\\b\\u00eb\\udb67\\udcb0\\udaf8\\udcc6\\u00e3\\u0015l\\u00a5\\ud874\\uddcc\\u0080\\u00d4\\u00d1G;\\u00c3\\uda77\\udd79[:\\u008e{Q\\u0000'",
+    "null",
+    "{\"\\ud86d\\uddac\":null,\"\":true,\"\\u00f6\\u00a6\\u00bc$\\u00fe\":null,\"P\\\\\\u00ff\\u00ee\\u009f\":\"\\u00e8]\",\"\\u007f\\u009b\\u00a2\\udb7e\\udf6dY\":null}",
+    "[-7687.26105405e-224]",
+    "null"
+  ],
+  "samples": 40,
+  "threshold": 70.0,
+  "valid": 34,
+  "valid_rate": 85.0
+}

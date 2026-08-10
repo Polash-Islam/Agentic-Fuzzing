@@ -1,0 +1,235 @@
+from hypothesis import strategies as st
+import json
+import decimal
+import string
+
+# Helper: text without embedded NULs and excluding C0 controls for valid branch
+_safe_text = st.text(min_size=0, max_size=12).filter(lambda s: '\x00' not in s and all(ord(c) >= 0x20 for c in s))
+
+# Helper: longer texts for stress branch (allow more variety and control characters)
+_stress_text = st.text(min_size=0, max_size=200)
+
+# Number builder that emits numeric JSON text without exponent notation (for valid branch).
+def _number_text_strategy():
+    # mantissa digits (0 allowed)
+    mantissa = st.integers(min_value=0, max_value=10**6).map(str)
+    sign = st.booleans().map(lambda b: '-' if b else '')
+    exponent = st.integers(min_value=-250, max_value=250)
+
+    def _build_num(ms, sgn, e):
+        # ms is mantissa string without leading zeros unless '0'
+        if ms == '0':
+            # Always represent zero as "0" (no exponent), optionally "0.0" sometimes
+            if e == 0:
+                return sgn + '0'
+            else:
+                # If mantissa is zero, ignore exponent and just return "0"
+                return sgn + '0'
+        # Shift decimal point by exponent e (no 'e' in representation)
+        if e >= 0:
+            digits = ms + ('0' * e)
+            # Avoid leading zeros: ms has no leading zeros
+            return sgn + digits
+        else:
+            # e < 0: produce fractional number
+            shift = -e
+            if shift < len(ms):
+                int_part = ms[:-shift]
+                frac_part = ms[-shift:]
+                # ensure no leading zero in integer part unless it is zero
+                if int_part == '':
+                    int_part = '0'
+                return sgn + int_part + '.' + frac_part
+            else:
+                zeros = '0' * (shift - len(ms))
+                return sgn + '0.' + zeros + ms
+
+    return st.tuples(mantissa, sign, exponent).map(lambda t: _build_num(*t)).filter(
+        # Must adhere to JSON integer leading-zero rules for whole numbers:
+        lambda s: not (s.lstrip('-').startswith('0') and not (s.lstrip('-') == '0' or ('.' in s)))
+    )
+
+# JSON string builder using json.dumps (ensures proper escaping; ensure_ascii=True to include \u escapes)
+_string_json = _safe_text.map(lambda s: json.dumps(s, ensure_ascii=True))
+
+# Primitive JSON text strategy for valid-recursive branch
+_valid_primitive_json = st.one_of(
+    st.just("null"),
+    st.just("true"),
+    st.just("false"),
+    _number_text_strategy(),
+    _string_json,
+)
+
+# Factory to create an object strategy given a children strategy (children yields JSON text for values)
+def _object_strategy(children, max_keys=5):
+    @st.composite
+    def _obj(draw):
+        # Unique keys, no embedded NULs
+        keys = draw(st.lists(_safe_text, unique=True, min_size=0, max_size=max_keys))
+        vals = [draw(children) for _ in keys]
+        if not keys:
+            return "{}"
+        pairs = []
+        for k, v in zip(keys, vals):
+            pairs.append(f"{json.dumps(k, ensure_ascii=True)}:{v}")
+        return "{" + ",".join(pairs) + "}"
+    return _obj()
+
+# Factory to create an array strategy given a children strategy
+def _array_strategy(children, max_elems=5):
+    @st.composite
+    def _arr(draw):
+        items = draw(st.lists(children, min_size=0, max_size=max_elems))
+        return "[" + ",".join(items) + "]"
+    return _arr()
+
+# Valid recursive JSON strategy (majority of valid cases)
+_valid_recursive_json = st.recursive(
+    _valid_primitive_json,
+    lambda children: st.one_of(
+        _array_strategy(children, max_elems=5),
+        _object_strategy(children, max_keys=5),
+    ),
+    max_leaves=40,
+)
+
+# Stress-valid primitives (long strings, escape-heavy, Unicode escapes, extreme numbers)
+_stress_string_json = st.one_of(
+    # Long Unicode text which json.dumps will escape
+    _stress_text.map(lambda s: json.dumps(s, ensure_ascii=True)),
+    # Escape-heavy strings built from backslashes and quotes
+    st.builds(lambda n: json.dumps(("\\" * n) + ('"' * (n % 3)), ensure_ascii=True), st.integers(min_value=0, max_value=100)),
+    # Strings containing many control characters (they'll be escaped by json.dumps)
+    st.builds(lambda s: json.dumps(s, ensure_ascii=True), st.text(min_size=0, max_size=500)),
+)
+
+# Stress number generator: larger integers and boundary-like values (but still valid JSON numeric forms)
+@st.composite
+def _stress_number_json(draw):
+    kind = draw(st.integers(min_value=0, max_value=3))
+    if kind == 0:
+        # very large integer
+        n = draw(st.integers(min_value=10**6, max_value=10**30))
+        return str(n)
+    if kind == 1:
+        # negative large integer
+        n = draw(st.integers(min_value=-(10**30), max_value=-10**6))
+        return str(n)
+    if kind == 2:
+        # fractional with many digits
+        whole = draw(st.integers(min_value=0, max_value=10**6))
+        frac = draw(st.integers(min_value=1, max_value=10**6))
+        return f"{whole}.{str(frac)}"
+    # kind == 3: small magnitude decimal using exponent-bound but rendered without 'e'
+    mantissa = draw(st.integers(min_value=1, max_value=10**6))
+    exp = draw(st.integers(min_value=-250, max_value=250))
+    # reuse normal formatting: treat as mantissa * 10^exp, render decimal form
+    ms = str(mantissa)
+    if exp >= 0:
+        return ms + ('0' * exp)
+    else:
+        shift = -exp
+        if shift < len(ms):
+            return ms[:-shift] + "." + ms[-shift:]
+        else:
+            return "0." + ("0" * (shift - len(ms))) + ms
+
+# Stress recursive JSON strategy (larger widths and depths)
+_stress_recursive_json = st.recursive(
+    st.one_of(st.just("null"), st.just("true"), st.just("false"), _stress_number_json, _stress_string_json),
+    lambda children: st.one_of(
+        _array_strategy(children, max_elems=50),
+        _object_strategy(children, max_keys=50),
+    ),
+    max_leaves=500,
+)
+
+# Malformed (near-valid) probes: explicit, rare, targeted deviations
+def _malformed_probes():
+    # various small generators for components used in malformed constructions
+    key = _safe_text
+    val_json = _valid_primitive_json
+
+    @st.composite
+    def trailing_comma_array(draw):
+        items = draw(st.lists(val_json, min_size=1, max_size=5))
+        return "[" + ",".join(items) + ",]"
+
+    @st.composite
+    def trailing_comma_object(draw):
+        ks = draw(st.lists(_safe_text, unique=True, min_size=1, max_size=5))
+        vals = [draw(val_json) for _ in ks]
+        pairs = [f'{json.dumps(k, ensure_ascii=True)}:{v}' for k, v in zip(ks, vals)]
+        return "{" + ",".join(pairs) + ",}"
+
+    @st.composite
+    def unquoted_keys(draw):
+        # Insert a bare word as a key (unquoted)
+        k = draw(st.text(min_size=1, max_size=10, alphabet=string.ascii_letters))
+        v = draw(val_json)
+        return "{" + f"{k}:{v}" + "}"
+
+    @st.composite
+    def single_quoted_string(draw):
+        s = draw(st.text(min_size=0, max_size=50))
+        # intentionally use single quotes instead of double
+        dumped = json.dumps(s, ensure_ascii=True)
+        if dumped.startswith('"') and dumped.endswith('"'):
+            inner = dumped[1:-1]
+            return "'" + inner + "'"
+        return "'" + s + "'"
+
+    @st.composite
+    def invalid_unicode_escape(draw):
+        s = draw(st.text(min_size=0, max_size=10))
+        # place an invalid unicode escape inside quotes
+        return json.dumps(s, ensure_ascii=False)[:-1] + "\\uZZZZ" + json.dumps(s, ensure_ascii=False)[1:]
+
+    @st.composite
+    def zero_exponent_forms(draw):
+        choice = draw(st.integers(min_value=0, max_value=1))
+        return "0E1" if choice == 0 else "-0E-1"
+
+    @st.composite
+    def duplicate_keys_object(draw):
+        k = draw(_safe_text)
+        v1 = draw(val_json)
+        v2 = draw(val_json)
+        return "{" + f'{json.dumps(k, ensure_ascii=True)}:{v1},{json.dumps(k, ensure_ascii=True)}:{v2}' + "}"
+
+    @st.composite
+    def missing_closing_brace(draw):
+        # produce a nearly-complete object but missing the final brace
+        ks = draw(st.lists(_safe_text, unique=True, min_size=1, max_size=3))
+        vals = [draw(val_json) for _ in ks]
+        pairs = [f'{json.dumps(k, ensure_ascii=True)}:{v}' for k, v in zip(ks, vals)]
+        return "{" + ",".join(pairs)  # no trailing brace
+
+    return st.one_of(
+        trailing_comma_array(),
+        trailing_comma_object(),
+        unquoted_keys(),
+        single_quoted_string(),
+        invalid_unicode_escape(),
+        zero_exponent_forms(),
+        duplicate_keys_object(),
+        missing_closing_brace(),
+    )
+
+_malformed_json = _malformed_probes()
+
+# Top-level weighted selection: ~75% valid recursive, ~15% stress valid, <=10% malformed
+# Achieve weights via integer selector + flatmap
+def _weighted_choice_strategy():
+    def chooser(n):
+        if n <= 75:
+            return _valid_recursive_json
+        elif n <= 90:
+            return _stress_recursive_json
+        else:
+            return _malformed_json
+    return st.integers(min_value=1, max_value=100).flatmap(chooser)
+
+# Top-level exported strategy
+json_strategy = _weighted_choice_strategy()

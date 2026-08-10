@@ -1,0 +1,19 @@
+{
+  "generation_errors": 0,
+  "invalid": 3,
+  "passed": true,
+  "python_invalid": 2,
+  "python_valid": 38,
+  "python_valid_rate": 95.0,
+  "sample_outputs": [
+    "{\"\\u00fa\\u00a2S\\u00d5\\udb8b\\uddeb\\ud999\\udd99\\ud89b\\udf96\":{\"\\u008e\\u00fch\\u00fc\":true},\"\":null,\"D\\u00fd\\u00cd\":true}",
+    "[]",
+    "null",
+    "\"\\u00f0\"",
+    "'\\u00bfGY\\ud9e9\\udd6b\\udb64\\udd19\\u0012\\u00e4'"
+  ],
+  "samples": 40,
+  "threshold": 70.0,
+  "valid": 37,
+  "valid_rate": 92.5
+}

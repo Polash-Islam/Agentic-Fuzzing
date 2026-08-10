@@ -1,0 +1,18 @@
+{
+  "config": {
+    "allow_overwrite": false,
+    "dry_run": false,
+    "gate_samples": 40,
+    "max_iterations": 5,
+    "min_gate_valid_rate": 70.0,
+    "model": "gpt-5-mini",
+    "start_iteration": 1,
+    "tests": 500,
+    "timeout": 5
+  },
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 3542,
+    "total_tokens": 7297
+  }
+}

@@ -1,0 +1,29 @@
+experiments/iteration_02/results.log
+======================================================================
+total             : 500
+valid             : 473
+invalid           : 27
+crash             : 0
+timeout           : 0
+unknown           : 0
+generation_error  : 0
+valid_rate        : 94.60%
+crash_rate        : 0.00%
+parsed_inputs     : 465
+invalid causes
+  syntax_invalid_for_python_json: 22
+  duplicate_key               : 3
+  zero_with_exponent          : 2
+structure coverage
+  array_items                 : 3212
+  object_keys                 : 3157
+  booleans                    : 1575
+  strings                     : 1517
+  objects                     : 1021
+  arrays                      : 1003
+  nulls                       : 904
+  unicode_strings             : 814
+  numbers                     : 814
+  max_depth                   : 613
+  nul_string_values           : 12
+  inputs_with_duplicate_keys  : 3

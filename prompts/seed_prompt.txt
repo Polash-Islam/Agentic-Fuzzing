@@ -1,0 +1,57 @@
+You are an expert in grammar-based fuzzing and property-based testing.
+
+You are given an ANTLR grammar describing a structured input language.
+
+Your task is to generate a Python Hypothesis strategy that produces inputs conforming to the given grammar.
+
+Requirements:
+
+1. Import Hypothesis strategies as:
+   from hypothesis import strategies as st
+
+2. The generated strategy MUST use st.recursive() to model recursive grammar structures.
+
+3. The generated inputs MUST conform to the supplied grammar.
+
+4. For JSON grammars, cover all valid value types:
+   - strings
+   - numbers
+   - objects
+   - arrays
+   - true
+   - false
+   - null
+
+5. Include important boundary and edge cases:
+   - empty objects
+   - empty arrays
+   - empty strings
+   - Unicode strings
+   - escaped characters
+   - duplicate object keys when permitted by the grammar
+   - deeply nested arrays
+   - deeply nested objects
+   - positive integers
+   - negative integers
+   - floating-point values
+   - very large numbers
+   - very small numbers
+   - exponent notation
+
+6. Prefer diverse generated inputs rather than repeatedly producing simple examples.
+
+7. Use Hypothesis strategies rather than manually generating a fixed list of examples.
+
+8. Avoid unbounded recursion or strategies that can cause infinite generation.
+
+9. The final result must expose a top-level Hypothesis strategy named:
+   json_strategy
+
+10. The strategy should generate strings suitable for passing directly to the target parser.
+
+11. Do not generate malformed inputs unless the supplied grammar explicitly permits them.
+
+12. Return ONLY valid Python source code.
+    Do not include Markdown fences.
+    Do not include explanations.
+    Do not include comments outside the Python source.

@@ -1,0 +1,699 @@
+Input: experiments/baseline/input_0001.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0002.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0003.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0004.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0005.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0006.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0007.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0008.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0009.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0010.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0011.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0012.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0013.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0014.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0015.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0016.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0017.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0018.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0019.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0020.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0021.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0022.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0023.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0024.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0025.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0026.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0027.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0028.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0029.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0030.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0031.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0032.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0033.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0034.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0035.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0036.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0037.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0038.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0039.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0040.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0041.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0042.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0043.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0044.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0045.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0046.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0047.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0048.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0049.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0050.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0051.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0052.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0053.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0054.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0055.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0056.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0057.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0058.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0059.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0060.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0061.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0062.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0063.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0064.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0065.txt
+Status: VALID
+Exit code: 0
+Stdout: VALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0066.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0067.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0068.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0069.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0070.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0071.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0072.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0073.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0074.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0075.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0076.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0077.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0078.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0079.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0080.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0081.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0082.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0083.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0084.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0085.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0086.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0087.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0088.txt
+Status: VALID
+Exit code: 0
+Stdout: VALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0089.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0090.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0091.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0092.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0093.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0094.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0095.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0096.txt
+Status: VALID
+Exit code: 0
+Stdout: VALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0097.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0098.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0099.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------
+
+Input: experiments/baseline/input_0100.txt
+Status: INVALID
+Exit code: 0
+Stdout: INVALID JSON
+Stderr: 
+----------------------------------------------------------------------

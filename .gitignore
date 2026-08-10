@@ -1,0 +1,14 @@
+.env
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.hypothesis/
+
+harness/harness
+*.dSYM/
+
+target/parson/test
+target/parson/testcpp
+target/parson/test_hash_collisions
+target/parson/*.dSYM/

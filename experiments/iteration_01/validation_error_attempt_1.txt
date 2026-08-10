@@ -1,0 +1,1 @@
+InvalidArgument: Expected a SearchStrategy but got <function accept.<locals>._stress_number_json at 0x111fc2de0> (type=function)

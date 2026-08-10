@@ -1,0 +1,4 @@
+hypothesis
+openai
+python-dotenv
+pypdf

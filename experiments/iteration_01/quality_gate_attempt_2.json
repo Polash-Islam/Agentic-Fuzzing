@@ -1,0 +1,19 @@
+{
+  "generation_errors": 0,
+  "invalid": 6,
+  "passed": true,
+  "python_invalid": 6,
+  "python_valid": 34,
+  "python_valid_rate": 85.0,
+  "sample_outputs": [
+    "null",
+    "[[null,false,null],[[true,false,true,-50e16,3397e47],false,false,false],{\"\\u00e8\\u00c1\\u0099\\u00cc\\ud80c\\udf27\\u00cf\":\"\",\"\":[null,-8.33407679,false,false,-5e-79],\"]l\\ud9e3\\uddec\":true},[[true,false,\"\\u008a\",true,null],[],[null],{\"\":null,\"X\\",
+    "\"\u00ee\u00cd\udb46\ude52\\uZZZZ\u00ee\u00cd\udb46\ude52\"",
+    "{\"\":{\"\":false,\"\\udbb3\\udca6\\u00edJ\\udb10\\udda1\\uda5b\\udca4\\u00dc\\u00a3\\ud9fb\\udec6\\u00c6\":null,\"f\\u00fe\\u00d7\\uf8d14\\u00cb\\ud90c\\udcd6\\u00ac\\u00ae\\u00d2\\udb4f\\udf2e\\u00cc\\u00fd\\u00a5%\\uda27\\udc20\":true,\"\\u00df\\u00ed\":false,\"\\u00fd\\ud841\\udd",
+    "{beSyVRWDHo:null}"
+  ],
+  "samples": 40,
+  "threshold": 70.0,
+  "valid": 34,
+  "valid_rate": 85.0
+}

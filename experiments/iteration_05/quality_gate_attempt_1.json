@@ -1,0 +1,19 @@
+{
+  "generation_errors": 0,
+  "invalid": 2,
+  "passed": true,
+  "python_invalid": 5,
+  "python_valid": 35,
+  "python_valid_rate": 87.5,
+  "sample_outputs": [
+    "[]",
+    "[null]",
+    "null",
+    "[709251854.2,\"9\\u0085\\u009a\",null,true,true,true]",
+    "[[-0,\"\\u0083\",819342266e35,true,\"I\\ud97a\\udf28\\u00db\\ud8af\\udda4B\\u00bb\",false],[false,-0.53568414894358,null,-0,false],{\"\":370e+113,\"^>+\\u00aax\":-0},[false,null,null,null],[null,-0.15723544102,true,false,\"\",true],-0.9]"
+  ],
+  "samples": 40,
+  "threshold": 70.0,
+  "valid": 38,
+  "valid_rate": 95.0
+}

@@ -1,0 +1,9 @@
+{
+  "model": "gpt-5-mini",
+  "input_tokens": 19620,
+  "output_tokens": 19325,
+  "total_tokens": 38945,
+  "cost_estimate_usd": 0.0436,
+  "pricing_basis": "Estimated with GPT-5 mini standard rates: $0.25 per 1M input tokens and $2.00 per 1M output tokens.",
+  "note": "Token counts are summed from experiments/iteration_01 through experiments/iteration_05 agentic_metadata.json files."
+}
