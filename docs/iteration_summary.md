@@ -2,6 +2,8 @@
 
 All statistics below were verified with `scripts/analyze_results.py` against the current checked logs.
 
+Parson's harnessed `json_parse_string` entry point reports parse failure as `NULL`; it does not expose detailed parser error messages. The invalid categories below are analyzer-derived explanations for rejected inputs, not raw Parson diagnostics.
+
 | Run | Total | Valid | Invalid | Crash | Timeout | Valid Rate | Main Purpose |
 |---|---:|---:|---:|---:|---:|---:|---|
 | Baseline | 100 | 3 | 97 | 0 | 0 | 3.00% | Pipeline check with arbitrary text |
@@ -94,4 +96,4 @@ The analyzer's structural counts are cumulative across parseable inputs. Its `ma
 
 ## Crash Triage
 
-No crash inputs were produced in the official iteration directories. The checked logs contain 0 crashes, 0 timeouts, 0 sanitizer reports, and 0 nonzero exits. No crash minimization or signature deduplication was possible because there were no crash artifacts.
+No crash-equivalent inputs were produced in the official iteration directories. The checked logs contain 0 crashes, 0 timeouts, 0 sanitizer reports, and 0 nonzero exits. Timeouts would count as crash-equivalent for grading, but none occurred. No crash minimization or signature deduplication was possible because there were no crash artifacts. For future crash artifacts, `scripts/triage_crashes.py` normalizes sanitizer stack frames and groups cases by `SIG-...` signature, while `scripts/minimize_crash.py` uses Hypothesis shrinking for strategy-reproducible failures.

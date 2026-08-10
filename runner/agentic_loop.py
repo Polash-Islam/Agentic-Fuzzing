@@ -30,6 +30,7 @@ class LoopConfig:
     max_iterations: int
     tests: int
     timeout: int
+    wall_clock_cap: int
     model: str
     allow_overwrite: bool
     dry_run: bool
@@ -68,6 +69,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=5,
         help="Per-input timeout in seconds.",
+    )
+    parser.add_argument(
+        "--wall-clock-cap",
+        type=int,
+        default=600,
+        help="Overall wall-clock cap per iteration in seconds. Assignment cap is 600.",
     )
     parser.add_argument(
         "--model",
@@ -171,11 +178,14 @@ Target:
 - Format: JSON
 - Harness entry point: json_parse_string
 - Harness output classes: VALID, INVALID, CRASH, TIMEOUT
+- Parser error text: json_parse_string returns NULL on rejection and does
+  not expose line/column/reason diagnostics through this harness.
 
 Budget:
 - Iteration cap: {config.max_iterations}
 - Inputs per iteration: {config.tests}
 - Per-input timeout: {config.timeout} seconds
+- Wall-clock cap per iteration: {config.wall_clock_cap} seconds
 
 Assignment requirements:
 - Start from the JSON grammar.
@@ -185,6 +195,8 @@ Assignment requirements:
   duplicate keys, extreme numeric values, and near-valid malformed inputs.
 - Optimize using feedback: crashes/timeouts, parser rejection patterns,
   and structural diversity.
+- Since Parson does not provide detailed parser error messages here, use
+  analyzer-derived rejection categories as the parser-error proxy.
 
 Important Parson observations from previous runs are campaign-specific.
 Do not assume they are JSON-standard violations.
@@ -439,6 +451,8 @@ def run_iteration(iteration: int, config: LoopConfig) -> str:
             str(config.tests),
             "--timeout",
             str(config.timeout),
+            "--wall-clock-cap",
+            str(config.wall_clock_cap),
         ]
     )
     return (result.stdout + result.stderr).strip()
@@ -462,6 +476,7 @@ def main() -> None:
         max_iterations=args.max_iterations,
         tests=args.tests,
         timeout=args.timeout,
+        wall_clock_cap=args.wall_clock_cap,
         model=args.model,
         allow_overwrite=args.allow_overwrite,
         dry_run=args.dry_run,
@@ -473,6 +488,8 @@ def main() -> None:
         raise SystemExit("Assignment cap is 500 inputs per iteration.")
     if config.max_iterations > 5:
         raise SystemExit("Assignment cap is 5 agentic iterations.")
+    if config.wall_clock_cap > 600:
+        raise SystemExit("Assignment wall-clock cap is 600 seconds per iteration.")
 
     build_result = run_command([str(HARNESS_BUILD.relative_to(ROOT))])
     if build_result.returncode != 0:

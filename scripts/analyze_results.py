@@ -208,7 +208,7 @@ def analyze_log(log_file: Path) -> dict[str, Any]:
         "total": total,
         **statuses,
         "valid_rate": statuses["valid"] / total * 100 if total else 0.0,
-        "crash_rate": statuses["crash"] / total * 100 if total else 0.0,
+        "crash_rate": (statuses["crash"] + statuses["timeout"]) / total * 100 if total else 0.0,
         "invalid_causes": invalid_causes,
         "parsed_inputs": parsed_inputs,
         "structural": structural,
@@ -234,7 +234,7 @@ def print_result(result: dict[str, Any]) -> None:
         print(f"{status.lower():18}: {result[status.lower()]}")
 
     print(f"{'valid_rate':18}: {result['valid_rate']:.2f}%")
-    print(f"{'crash_rate':18}: {result['crash_rate']:.2f}%")
+    print(f"{'crash_rate':18}: {result['crash_rate']:.2f}% (includes timeouts)")
     print(f"{'parsed_inputs':18}: {result['parsed_inputs']}")
     print_counter("invalid causes", result["invalid_causes"])
     print_counter("structure coverage", result["structural"])

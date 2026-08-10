@@ -58,6 +58,8 @@ strategies/baseline.py
 runner/agentic_loop.py
 runner/iteration_runner.py
 scripts/analyze_results.py
+scripts/triage_crashes.py
+scripts/minimize_crash.py
 logs/baseline.log
 experiments/iteration_01/
 experiments/iteration_02/
@@ -76,6 +78,8 @@ Each official iteration directory contains the generated `strategy.py`, `llm_pro
 
 The harness reads one input file, calls `json_parse_string`, prints `VALID JSON` or `INVALID JSON`, frees allocated values, and exits normally for accepted and rejected inputs.
 
+Parson's public `json_parse_string` API returns either a parsed `JSON_Value *` or `NULL`; it does not expose a detailed parser error message, reason, line, or column through this harnessed entry point. Therefore, rejection feedback is based on the harness outcome (`INVALID JSON`) plus analyzer-derived categories such as Python JSON syntax rejection, duplicate keys, and zero-with-exponent numeric forms.
+
 The build script compiles with:
 
 ```text
@@ -88,9 +92,12 @@ The iteration runner supports:
 --iteration  required integer
 --tests      optional integer, default 500
 --timeout    optional integer, default 5 seconds
+--wall-clock-cap optional integer, default 600 seconds
 ```
 
-Timeouts are logged as `TIMEOUT`. Nonzero exits or sanitizer markers are logged as `CRASH`.
+Timeouts are logged as `TIMEOUT` so hangs can be distinguished from sanitizer/process crashes during analysis, but they are treated as crash-equivalent for grading and crash-rate calculations. Nonzero exits or sanitizer markers are logged as `CRASH`.
+
+The runner also enforces a 600-second wall-clock cap for each iteration as the assignment backstop. If the cap is reached before all requested inputs are generated, the run stops early and records a `WALL_CLOCK_CAP` marker without counting it as an input.
 
 ## Official Results
 
@@ -127,7 +134,11 @@ Verified crash-related results:
 - Nonzero exits in checked logs: 0
 - Crash files under official iteration crash directories: none
 
-No crash inputs were produced, so there were no sanitizer signatures to deduplicate and no reproducers to minimize. This means no crash was found within the executed budget; it does not prove that Parson is bug-free.
+No crash-equivalent inputs were produced: there were no `CRASH` entries and no `TIMEOUT` entries. Therefore, there were no sanitizer signatures to deduplicate and no reproducers to minimize. This means no crash was found within the executed budget; it does not prove that Parson is bug-free.
+
+If future runs produce crash-equivalent cases, `scripts/triage_crashes.py` scans `results.log` entries and/or crash-case directories containing `input.json`, `stderr.txt`, and `metadata.json`. It normalizes the top sanitizer stack frames, hashes them into `SIG-...` signatures, and groups repeated crashes by signature.
+
+`scripts/minimize_crash.py` provides the Hypothesis-shrinking path for future strategy-reproducible crashes. It runs `hypothesis.find()` with the generated `json_strategy` and the harness crash predicate, writes a minimized reproducer, and verifies it standalone. Because the official campaign found no crash-equivalent inputs, shrinking was not exercised on a real Parson failure.
 
 ## Limitations
 
@@ -162,6 +173,20 @@ venv/bin/python scripts/analyze_results.py \
   experiments/iteration_03/results.log \
   experiments/iteration_04/results.log \
   experiments/iteration_05/results.log
+```
+
+Triage crash-equivalent cases:
+
+```bash
+venv/bin/python scripts/triage_crashes.py
+```
+
+Minimize a future strategy-reproducible crash:
+
+```bash
+venv/bin/python scripts/minimize_crash.py \
+  --strategy experiments/iteration_05/strategy.py \
+  --output minimized_reproducer.json
 ```
 
 Run a new LLM-driven campaign:

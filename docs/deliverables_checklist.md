@@ -7,6 +7,8 @@
 - [x] Iteration runner present: `runner/iteration_runner.py`
 - [x] LLM-driven agentic loop implementation present: `runner/agentic_loop.py`
 - [x] Feedback analyzer present: `scripts/analyze_results.py`
+- [x] Crash triage/signature utility present: `scripts/triage_crashes.py`
+- [x] Crash minimization utility present: `scripts/minimize_crash.py`
 - [x] Iteration 1 complete: `experiments/iteration_01/strategy.py` and `experiments/iteration_01/results.log`
 - [x] Iteration 2 complete: `experiments/iteration_02/strategy.py` and `experiments/iteration_02/results.log`
 - [x] Iteration 3 complete: `experiments/iteration_03/strategy.py` and `experiments/iteration_03/results.log`
@@ -25,6 +27,7 @@
 - Baseline inputs: 100
 - Inputs per official iteration: 500
 - Per-input timeout: 5 seconds
+- Current runner wall-clock cap: 600 seconds
 - LLM model: `gpt-5-mini`
 - Quality gate: 40 samples, minimum 70% Parson-valid before full iteration
 - LLM total tokens: 38,945

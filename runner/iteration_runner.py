@@ -1,6 +1,7 @@
 import importlib.util
 import argparse
 import subprocess
+import time
 import warnings
 from pathlib import Path
 
@@ -35,6 +36,12 @@ def parse_args():
         type=int,
         default=5,
         help="Per-input timeout in seconds.",
+    )
+    parser.add_argument(
+        "--wall-clock-cap",
+        type=int,
+        default=600,
+        help="Overall iteration wall-clock cap in seconds. Assignment cap is 600.",
     )
     return parser.parse_args()
 
@@ -151,6 +158,7 @@ def main():
     print(f"Harness  : {HARNESS}")
     print(f"Tests    : {args.tests}")
     print(f"Timeout  : {args.timeout}s")
+    print(f"Wall cap : {args.wall_clock_cap}s")
     print()
 
     strategy = load_strategy(strategy_file)
@@ -164,8 +172,11 @@ def main():
     crashes = 0
     timeouts = 0
     unknown = 0
+    attempted = 0
+    stopped_by_wall_clock = False
 
     logs = []
+    start_time = time.monotonic()
 
     print(
         f"Generating {args.tests} test cases...\n"
@@ -176,6 +187,22 @@ def main():
     # --------------------------------------------------------
 
     for i in range(1, args.tests + 1):
+        elapsed = time.monotonic() - start_time
+        if elapsed >= args.wall_clock_cap:
+            stopped_by_wall_clock = True
+            logs.append(
+                "Run: wall_clock_cap\n"
+                "Status: WALL_CLOCK_CAP\n"
+                f"Elapsed seconds: {elapsed:.2f}\n"
+                f"{'-' * 70}\n"
+            )
+            print(
+                f"Stopped before input {i:04d}: "
+                f"wall-clock cap reached ({elapsed:.2f}s)."
+            )
+            break
+
+        attempted += 1
 
         try:
 
@@ -348,7 +375,11 @@ def main():
     print("=" * 50)
 
     print(
-        f"Total     : {args.tests}"
+        f"Requested : {args.tests}"
+    )
+
+    print(
+        f"Attempted : {attempted}"
     )
 
     print(
@@ -369,6 +400,14 @@ def main():
 
     print(
         f"Unknown   : {unknown}"
+    )
+
+    print(
+        f"Wall cap  : {args.wall_clock_cap}s"
+    )
+
+    print(
+        f"Stopped by wall cap: {stopped_by_wall_clock}"
     )
 
     print("=" * 50)
