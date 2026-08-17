@@ -2,7 +2,7 @@
 
 An LLM-driven, grammar-based fuzzing pipeline for the Parson JSON parser. The repository starts from an ANTLR JSON grammar, generates Hypothesis strategies through a bounded agentic loop, executes them against a sanitizer-enabled C harness, and records reproducible experiment artifacts.
 
-> **Documentation split:** this README focuses on repository structure, implementation, execution, limits, and artifact provenance. The assignment-style discussion of **Design, Findings, and Challenges** is in [`docs/final_report.md`](docs/final_report.md).
+> **Documentation split:** this README focuses on repository structure, implementation, execution, limits, and artifact provenance. The assignment-style discussion of **Design, Findings, and Challenges** is in [`docs/final_report.md`](docs/Final_Report.pdf).
 
 ## Target
 
@@ -29,8 +29,6 @@ Agentic-Fuzzing/
 ```
 
 Each official iteration records the prompt, LLM responses/attempts, accepted strategy, quality-gate results, model metadata, generated inputs, execution log, analysis, and crash directory.
-
-## End-to-End Pipeline
 
 ## End-to-End Fuzzing Pipeline
 
@@ -124,7 +122,7 @@ Campaign limits:
 
 No `CRASH`, `TIMEOUT`, sanitizer report, or nonzero-exit finding was observed in the checked campaign.
 
-See [`docs/final_report.md`](docs/final_report.md) for the interpretation of these results and the iteration-by-iteration strategy evolution.
+See [`docs/Final_Report.pdf`](docs/final_report.md) for the interpretation of these results and the iteration-by-iteration strategy evolution.
 
 ## Feedback and Analysis
 
@@ -237,7 +235,7 @@ The LLM-driven run requires the appropriate API environment configuration. Never
 
 ## Documentation
 
-- [`docs/final_report.md`](docs/final_report.md) — assignment-focused report: Design, Findings, Challenges.
+- [`docs/Final_Report.pdf`](docs/Final_Report.md) — assignment-focused report: Design, Findings, Challenges.
 - [`docs/iteration_summary.md`](docs/iteration_summary.md) — iteration execution summary.
 - [`docs/agentic_loop_log.md`](docs/agentic_loop_log.md) — agentic-loop execution record.
 - `experiments/iteration_*/` — prompts, responses, strategies, inputs, logs, analysis, and metadata.
