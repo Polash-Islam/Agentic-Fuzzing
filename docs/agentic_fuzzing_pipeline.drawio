@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Agentic Fuzzing Pipeline" id="agentic-fuzzing-pipeline">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="grammar" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;spacing=10;" value="&lt;b&gt;01. JSON Grammar Seed&lt;/b&gt;&lt;br&gt;grammar/JSON.g4&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Objects • Arrays • Strings • Numbers • Escapes • Unicode&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;spacing=10;" value="&lt;b&gt;02. Agentic Loop&lt;/b&gt;&lt;br&gt;runner/agentic_loop.py&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Grammar + previous strategy + feedback&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="strategy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;spacing=10;" value="&lt;b&gt;03. LLM-Generated Hypothesis Strategy&lt;/b&gt;&lt;br&gt;strategy.py&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Recursive JSON • escaping • numeric edge cases • nesting&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="gate" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;spacing=10;" value="&lt;b&gt;04. Quality Gate&lt;/b&gt;&lt;br&gt;40 samples • ≥70% Parson-valid&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Reject low-quality strategies before full run&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="runner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;spacing=10;" value="&lt;b&gt;05. Fuzzing Runner&lt;/b&gt;&lt;br&gt;runner/iteration_runner.py&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Up to 500 inputs • 5 s/input • 600 s cap&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="harness" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;spacing=10;" value="&lt;b&gt;06. Sanitizer-Enabled C Harness&lt;/b&gt;&lt;br&gt;harness/harness.c + build.sh&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;ASan + UBSan • parser entry point&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="parser" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;spacing=10;" value="&lt;b&gt;07. Parson JSON Parser&lt;/b&gt;&lt;br&gt;json_parse_string()&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;VALID / INVALID / CRASH / TIMEOUT&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="analysis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=15;spacing=10;" value="&lt;b&gt;08. Result Analysis&lt;/b&gt;&lt;br&gt;scripts/analyze_results.py&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Acceptance • rejection categories • structural diversity • crash signals&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="400" x="500" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="feedback" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;spacing=10;" value="&lt;b&gt;Feedback Signal&lt;/b&gt;&lt;br&gt;Proxy for coverage&lt;br&gt;&lt;font style=&#39;font-size:11px&#39;&gt;Acceptance + rejection categories + structural counts&lt;/font&gt;" vertex="1">
+          <mxGeometry height="110" width="330" x="1340" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="valid" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" value="&lt;b&gt;VALID&lt;/b&gt;&lt;br&gt;Parsed JSON value returned" vertex="1">
+          <mxGeometry height="70" width="190" x="1020" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="invalid" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;" value="&lt;b&gt;INVALID&lt;/b&gt;&lt;br&gt;Clean parser rejection" vertex="1">
+          <mxGeometry height="70" width="190" x="1030" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="crash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" value="&lt;b&gt;CRASH / TIMEOUT&lt;/b&gt;&lt;br&gt;Crash-equivalent for grading" vertex="1">
+          <mxGeometry height="70" width="230" x="1240" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="grammar" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="agent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="strategy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="strategy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="gate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="runner">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="runner" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="harness">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="harness" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="parser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="parser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="analysis" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="feedback">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="feedback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673a6;fontSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="agent" value="refine next iteration">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="parser" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=11;" target="valid" value="parsed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="parser" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;fontSize=11;" target="invalid" value="clean rejection">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="parser" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#b85450;fontSize=11;" target="crash" value="sanitizer/nonzero or 5s timeout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

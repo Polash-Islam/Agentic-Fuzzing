@@ -1,107 +1,117 @@
 # Agentic Fuzzing
 
-## Overview
+An LLM-driven, grammar-based fuzzing pipeline for the Parson JSON parser. The repository starts from an ANTLR JSON grammar, generates Hypothesis strategies through a bounded agentic loop, executes them against a sanitizer-enabled C harness, and records reproducible experiment artifacts.
 
-This repository contains an assignment implementation of an LLM-driven, grammar-based fuzzer for the Parson JSON parser. The workflow starts from an ANTLR JSON grammar, asks an LLM to generate Hypothesis strategies, runs those strategies through a sanitizer-enabled C harness, analyzes feedback, and refines the next strategy within a five-iteration budget.
-
-The current official campaign was run from a fresh baseline plus five quality-gated agentic iterations. Each official iteration generated 500 inputs. No crashes, timeouts, sanitizer reports, or nonzero exits were observed in the checked logs.
+> **Documentation split:** this README focuses on repository structure, implementation, execution, limits, and artifact provenance. The assignment-style discussion of **Design, Findings, and Challenges** is in [`docs/final_report.md`](docs/final_report.md).
 
 ## Target
 
-- Library: Parson
-- Language: C
-- Input format: JSON
-- Checked target commit: `ba29f4eda9ea7703a9f6a9cf2b0532a2605723c3`
-- Harnessed parser entry point: `json_parse_string`
+- **Library:** Parson
+- **Language:** C
+- **Input format:** JSON
+- **Pinned commit:** `ba29f4eda9ea7703a9f6a9cf2b0532a2605723c3`
+- **Harnessed entry point:** `json_parse_string`
 
-The harness exercises Parson's parser entry point only. It does not claim full coverage of serialization, validation, persistence, comment parsing, or deep-copy APIs.
+The harness intentionally targets the parser entry point. It does not claim coverage of Parson's serialization, validation, persistence, comment parsing, or deep-copy APIs.
 
-## Architecture
-
-```text
-grammar/JSON.g4
-    |
-    v
-runner/agentic_loop.py
-    |
-    v
-LLM-generated Hypothesis strategy.py
-    |
-    v
-runner/iteration_runner.py
-    |
-    v
-harness/harness.c
-    |
-    v
-Parson json_parse_string
-    |
-    v
-VALID / INVALID / CRASH / TIMEOUT
-    |
-    v
-scripts/analyze_results.py
-    |
-    v
-next LLM prompt and refined strategy
-```
-
-`runner/agentic_loop.py` implements the agentic loop. It builds prompts from the grammar, previous strategy, and analyzer feedback; calls the OpenAI API when `OPENAI_API_KEY` is configured; writes prompt/response artifacts; extracts a candidate `strategy.py`; validates that `json_strategy` exists; applies a 40-sample pre-run quality gate requiring at least 70% Parson-valid examples; runs the bounded fuzzing iteration; and saves analyzer feedback for the next prompt.
-
-## Main Artifacts
+## Repository Layout
 
 ```text
-grammar/JSON.g4
-harness/build.sh
-harness/harness.c
-strategies/baseline.py
-runner/agentic_loop.py
-runner/iteration_runner.py
-scripts/analyze_results.py
-scripts/triage_crashes.py
-scripts/minimize_crash.py
-logs/baseline.log
-experiments/iteration_01/
-experiments/iteration_02/
-experiments/iteration_03/
-experiments/iteration_04/
-experiments/iteration_05/
-experiments/agentic_loop_usage.json
-docs/final_report.md
-docs/iteration_summary.md
-docs/agentic_loop_log.md
+Agentic-Fuzzing/
+├── grammar/JSON.g4
+├── harness/{build.sh,harness.c,sample_inputs/}
+├── strategies/baseline.py
+├── runner/{agentic_loop.py,iteration_runner.py}
+├── scripts/{analyze_results.py,triage_crashes.py,minimize_crash.py}
+├── logs/baseline.log
+├── experiments/{iteration_01..iteration_05,agentic_loop_usage.json}
+└── docs/{final_report.md,iteration_summary.md,agentic_loop_log.md}
 ```
 
-Each official iteration directory contains the generated `strategy.py`, `llm_prompt.md`, `llm_response.txt`, `agentic_metadata.json`, generated `inputs/`, `results.log`, and `analysis.txt`.
+Each official iteration records the prompt, LLM responses/attempts, accepted strategy, quality-gate results, model metadata, generated inputs, execution log, analysis, and crash directory.
 
-## Harness and Runner
+## End-to-End Pipeline
 
-The harness reads one input file, calls `json_parse_string`, prints `VALID JSON` or `INVALID JSON`, frees allocated values, and exits normally for accepted and rejected inputs.
+## End-to-End Fuzzing Pipeline
 
-Parson's public `json_parse_string` API returns either a parsed `JSON_Value *` or `NULL`; it does not expose a detailed parser error message, reason, line, or column through this harnessed entry point. Therefore, rejection feedback is based on the harness outcome (`INVALID JSON`) plus analyzer-derived categories such as Python JSON syntax rejection, duplicate keys, and zero-with-exponent numeric forms.
+![Agentic Fuzzing Pipeline](docs/agentic_fuzzing_pipeline.png)
 
-The build script compiles with:
+The pipeline starts from the JSON grammar, generates and quality-checks
+an LLM-produced Hypothesis strategy, executes it through the sanitizer-
+enabled harness, classifies parser outcomes, and feeds black-box feedback
+back into the next agentic iteration.
+
+[Open the editable Draw.io diagram](docs/agentic_fuzzing_pipeline.drawio)
+
+## Grammar Seed
+
+`grammar/JSON.g4` is the formal grammar seed. It covers objects, arrays, strings, escape sequences, Unicode escapes, numbers, booleans, null, and whitespace.
+
+The grammar source is retained unchanged. Adaptation happens in the generated Hypothesis strategy: sampling weights and stress cases are changed from execution feedback without rewriting the grammar. The strategy therefore acts as the adaptive sampling policy over the formal grammar.
+
+## Agentic Loop
+
+`runner/agentic_loop.py`:
+
+1. loads the grammar;
+2. loads the previous strategy when available;
+3. recomputes feedback from the baseline log and earlier `results.log` files;
+4. builds and saves `llm_prompt.md`;
+5. calls the configured LLM;
+6. stores raw responses and the accepted `strategy.py`;
+7. checks that `json_strategy` exists and is runnable;
+8. applies the pre-run quality gate;
+9. executes the bounded fuzzing iteration;
+10. saves `analysis.txt` and model/usage metadata.
+
+The next prompt is driven by **raw execution evidence**, not by blindly trusting a previous summary file. `analysis.txt` remains an auditable record of the completed iteration.
+
+### Quality Gate
+
+Before the full fuzzing budget:
+
+- 40 examples are generated;
+- at least 70% must be accepted by Parson;
+- weak candidates are rejected and retried.
+
+This prevents a syntactically valid but mostly rejected generator from consuming the main budget.
+
+## Harness and Build
+
+`harness/harness.c` reads one input file and passes it to `json_parse_string`.
+
+- Successful parsing prints `VALID JSON`.
+- Clean parser rejection prints `INVALID JSON`.
+- Both are normal process outcomes.
+- The returned Parson value is freed after successful parsing.
+
+The public `json_parse_string` API does not expose detailed parse-error information through this harness, so rejection analysis uses the harness outcome plus analyzer-derived categories.
+
+`harness/build.sh` compiles with:
 
 ```text
 -g -O0 -Wall -Wextra -fsanitize=address,undefined
 ```
 
-The iteration runner supports:
+## Runner Outcome States
 
-```text
---iteration  required integer
---tests      optional integer, default 500
---timeout    optional integer, default 5 seconds
---wall-clock-cap optional integer, default 600 seconds
-```
+| State | Meaning |
+|---|---|
+| `VALID` | Parson accepted the input and exited normally. |
+| `INVALID` | Parson rejected the input and exited normally. |
+| `CRASH` | Nonzero exit or sanitizer evidence. |
+| `TIMEOUT` | The 5-second per-input timeout expired. |
 
-Timeouts are logged as `TIMEOUT` so hangs can be distinguished from sanitizer/process crashes during analysis, but they are treated as crash-equivalent for grading and crash-rate calculations. Nonzero exits or sanitizer markers are logged as `CRASH`.
+`TIMEOUT` is kept separate for diagnosis but is **crash-equivalent for grading**, because a parser hang can be a denial-of-service failure.
 
-The runner also enforces a 600-second wall-clock cap for each iteration as the assignment backstop. If the cap is reached before all requested inputs are generated, the run stops early and records a `WALL_CLOCK_CAP` marker without counting it as an input.
+Campaign limits:
 
-## Official Results
+- 500 inputs per iteration
+- 5 agentic iterations maximum
+- 5 seconds per input
+- 600 seconds / 10 minutes wall-clock cap per iteration
 
-Verified with `scripts/analyze_results.py`:
+## Official Campaign
 
 | Experiment | Total | Valid | Invalid | Crash | Timeout | Valid Rate |
 |---|---:|---:|---:|---:|---:|---:|
@@ -112,58 +122,69 @@ Verified with `scripts/analyze_results.py`:
 | Iteration 4 | 500 | 460 | 40 | 0 | 0 | 92.00% |
 | Iteration 5 | 500 | 463 | 37 | 0 | 0 | 92.60% |
 
-The quality-gated agentic loop immediately improved over the random baseline and kept Parson acceptance above 92% in every official iteration. The remaining invalid inputs were mostly categorized as malformed syntax, duplicate keys, and zero-with-exponent numeric forms. This is documented as parser-boundary exploration and feedback-loop limitation, not as a crash finding.
+No `CRASH`, `TIMEOUT`, sanitizer report, or nonzero-exit finding was observed in the checked campaign.
 
-## Token and Cost Budget
+See [`docs/final_report.md`](docs/final_report.md) for the interpretation of these results and the iteration-by-iteration strategy evolution.
 
-The five LLM strategy-generation iterations used:
+## Feedback and Analysis
+
+`scripts/analyze_results.py` summarizes valid/invalid/crash/timeout totals, acceptance rate, analyzer-derived invalid categories, and structural counts used as a diversity proxy.
+
+There is no compiler coverage instrumentation. Structural counts are therefore **not code coverage**; they are observable properties of generated inputs used to steer sampling toward different JSON shapes and stress cases.
+
+## Crash Triage
+
+The official campaign produced no crash-equivalent cases, so there was nothing to deduplicate.
+
+For future cases, `scripts/triage_crashes.py`:
+
+1. keeps `CRASH` and `TIMEOUT` cases;
+2. extracts sanitizer stack frames when available;
+3. normalizes common suffixes such as `.cold`, `.isra.N`, and `.constprop.N`;
+4. hashes normalized frames into `SIG-<hash>` signatures;
+5. groups repeated crash-equivalent cases.
+
+If stack frames are unavailable, it uses a status/exit/error fallback key.
+
+```bash
+venv/bin/python scripts/triage_crashes.py
+venv/bin/python scripts/triage_crashes.py --json
+```
+
+## Crash Minimization
+
+`scripts/minimize_crash.py` supports verification and Hypothesis shrinking.
+
+```bash
+venv/bin/python scripts/minimize_crash.py --input path/to/crash/input.json
+```
+
+```bash
+venv/bin/python scripts/minimize_crash.py \
+  --strategy experiments/iteration_05/strategy.py \
+  --output minimized_reproducer.json
+```
+
+The script uses `json_strategy`, a `CRASH`/`TIMEOUT` predicate, `hypothesis.find()`, and standalone verification. No real failure was available to shrink in the official campaign.
+
+## Token and Cost Record
 
 | Model | Input Tokens | Output Tokens | Total Tokens | Estimated Cost |
 |---|---:|---:|---:|---:|
 | `gpt-5-mini` | 19,620 | 19,325 | 38,945 | about `$0.04` |
 
-The cost estimate uses GPT-5 mini standard rates of `$0.25` per 1M input tokens and `$2.00` per 1M output tokens. The exact billing page may differ due to processing mode or account settings, but the recorded token usage is stored in `experiments/iteration_*/agentic_metadata.json`.
-
-## Crash Triage
-
-Verified crash-related results:
-
-- Crashes: 0
-- Timeouts: 0
-- Sanitizer reports in checked logs: 0
-- Nonzero exits in checked logs: 0
-- Crash files under official iteration crash directories: none
-
-No crash-equivalent inputs were produced: there were no `CRASH` entries and no `TIMEOUT` entries. Therefore, there were no sanitizer signatures to deduplicate and no reproducers to minimize. This means no crash was found within the executed budget; it does not prove that Parson is bug-free.
-
-If future runs produce crash-equivalent cases, `scripts/triage_crashes.py` scans `results.log` entries and/or crash-case directories containing `input.json`, `stderr.txt`, and `metadata.json`. It normalizes the top sanitizer stack frames, hashes them into `SIG-...` signatures, and groups repeated crashes by signature.
-
-`scripts/minimize_crash.py` provides the Hypothesis-shrinking path for future strategy-reproducible crashes. It runs `hypothesis.find()` with the generated `json_strategy` and the harness crash predicate, writes a minimized reproducer, and verifies it standalone. Because the official campaign found no crash-equivalent inputs, shrinking was not exercised on a real Parson failure.
-
-## Limitations
-
-- The harness exercises only `json_parse_string`.
-- Structural diversity is a proxy signal, not code coverage.
-- Invalid-cause labels are analyzer classifications, not formal JSON-standard judgments.
-- No crash or vulnerability was found.
+Usage is stored in `experiments/iteration_*/agentic_metadata.json` and `experiments/agentic_loop_usage.json`.
 
 ## Reproducibility
 
-Install dependencies:
-
 ```bash
 python -m pip install -r requirements.txt
-```
-
-Build and smoke-test the harness:
-
-```bash
 ./harness/build.sh
 ./harness/harness harness/sample_inputs/valid.json
 ./harness/harness harness/sample_inputs/invalid.json
 ```
 
-Analyze the checked logs:
+Analyze the official logs:
 
 ```bash
 venv/bin/python scripts/analyze_results.py \
@@ -175,24 +196,48 @@ venv/bin/python scripts/analyze_results.py \
   experiments/iteration_05/results.log
 ```
 
-Triage crash-equivalent cases:
+Run a new campaign:
 
 ```bash
-venv/bin/python scripts/triage_crashes.py
+venv/bin/python runner/agentic_loop.py \
+  --start-iteration 1 \
+  --max-iterations 5 \
+  --tests 500 \
+  --model gpt-5-mini
 ```
 
-Minimize a future strategy-reproducible crash:
+The LLM-driven run requires the appropriate API environment configuration. Never commit credentials. Use `--allow-overwrite` only when intentionally replacing experiment artifacts.
 
-```bash
-venv/bin/python scripts/minimize_crash.py \
-  --strategy experiments/iteration_05/strategy.py \
-  --output minimized_reproducer.json
-```
+## Artifact Provenance
 
-Run a new LLM-driven campaign:
+| Artifact | Purpose |
+|---|---|
+| `grammar/JSON.g4` | Formal grammar seed |
+| `strategies/baseline.py` | Baseline generator |
+| `llm_prompt.md` | Exact prompt supplied to the LLM |
+| `llm_response.txt` | Final accepted LLM response |
+| `llm_response_attempt_*.txt` | Individual LLM attempts |
+| `strategy.py` | Extracted runnable Hypothesis strategy |
+| `agentic_metadata.json` | Model/token/usage metadata |
+| `quality_gate_attempt_*.json` | Quality-gate records |
+| `agentic_run_output.txt` | Iteration runner output |
+| `inputs/` | Generated inputs |
+| `results.log` | Per-input outcomes |
+| `analysis.txt` | Completed-iteration analysis record |
+| `crashes/` | Crash-equivalent artifacts, when present |
 
-```bash
-venv/bin/python runner/agentic_loop.py --start-iteration 1 --max-iterations 5 --tests 500 --model gpt-5-mini
-```
+## Limitations
 
-Use `--allow-overwrite` only if replacing existing official iteration artifacts is intentional.
+- Parser entry point only: `json_parse_string`.
+- No compiler coverage instrumentation.
+- Structural counts are diversity proxies, not coverage.
+- Detailed parser error messages are unavailable.
+- Strategy-based shrinking requires a strategy that can reproduce the failing class.
+- No crash or vulnerability was found within the official budget.
+
+## Documentation
+
+- [`docs/final_report.md`](docs/final_report.md) — assignment-focused report: Design, Findings, Challenges.
+- [`docs/iteration_summary.md`](docs/iteration_summary.md) — iteration execution summary.
+- [`docs/agentic_loop_log.md`](docs/agentic_loop_log.md) — agentic-loop execution record.
+- `experiments/iteration_*/` — prompts, responses, strategies, inputs, logs, analysis, and metadata.
