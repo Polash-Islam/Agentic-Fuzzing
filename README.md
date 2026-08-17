@@ -235,7 +235,7 @@ The LLM-driven run requires the appropriate API environment configuration. Never
 
 ## Documentation
 
-- [`docs/Final_Report.pdf`](docs/Final_Report.Pdf) — assignment-focused report: Design, Findings, Challenges.
+- [`docs/Final_Report.pdf`](docs/Final_Report.pdf) — assignment-focused report: Design, Findings, Challenges.
 - [`docs/iteration_summary.md`](docs/iteration_summary.md) — iteration execution summary.
 - [`docs/agentic_loop_log.md`](docs/agentic_loop_log.md) — agentic-loop execution record.
 - `experiments/iteration_*/` — prompts, responses, strategies, inputs, logs, analysis, and metadata.
